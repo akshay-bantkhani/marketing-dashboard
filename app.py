@@ -39,6 +39,27 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block');
 
+/* Force Material Symbols font on Streamlit icon buttons (fixes ligature text) */
+[data-testid="stSidebarCollapseButton"], [data-testid="stSidebarCollapseButton"] *,
+[data-testid="stSidebarCollapsedControl"], [data-testid="stSidebarCollapsedControl"] *,
+button[kind="headerNoPadding"], button[kind="headerNoPadding"] *,
+[data-testid="baseButton-headerNoPadding"], [data-testid="baseButton-headerNoPadding"] * {
+  font-family: 'Material Symbols Rounded', 'Material Icons' !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  white-space: nowrap !important;
+  word-wrap: normal !important;
+  direction: ltr !important;
+  -webkit-font-feature-settings: 'liga' !important;
+  font-feature-settings: 'liga' !important;
+  -webkit-font-smoothing: antialiased !important;
+  text-rendering: optimizeLegibility !important;
+}
+
 /* === Force Light Theme & Global Reset === */
 html, body, [data-testid="stApp"], [data-testid="stApp"] > div { background-color: #ffffff !important; color: #1e293b !important; }
 html, body, [class*="css"], [data-testid="stApp"] * { font-family: 'Inter', sans-serif; }

@@ -701,6 +701,7 @@ def drilldown_table(df, title="Top Pages by Sessions", total_sessions=None):
     if df.empty:
         st.info("No page-level data available")
         return
+    df = df[~df['Page'].astype(str).str.strip().str.lower().isin(['(not set)', '(not provided)', ''])]
     top = df.groupby('Page').agg({'Sessions':'sum','Users':'sum'}).reset_index().sort_values('Sessions', ascending=False).head(10)
     denom = total_sessions if (total_sessions and total_sessions > 0) else top['Sessions'].sum()
     top['% Share'] = (top['Sessions'] / denom * 100).round(1) if denom > 0 else 0

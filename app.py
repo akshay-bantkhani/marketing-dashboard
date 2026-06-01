@@ -1518,7 +1518,8 @@ traffic_section = {'title': 'Overall Website Traffic', 'table': {'columns': ['We
 for _, r in t_weekly.sort_values('Week_Idx', ascending=False).iterrows():
     traffic_section['table']['data'].append([r['Week_Label'], fmt(r['Sessions']), fmt(r['Users'])])
 t_ach = (cur_s / targets['overall_traffic'] * 100) if targets['overall_traffic'] > 0 else 0
-traffic_section['insights'] = [f"Achieved {t_ach:.0f}% of traffic target ({fmt(cur_s)} / {fmt(targets['overall_traffic'])})", f"WoW change: {chg:+.1f}%"]
+_wow_pct = pct_change(cur_s, prev_s)
+traffic_section['insights'] = [f"Achieved {t_ach:.0f}% of traffic target ({fmt(cur_s)} / {fmt(targets['overall_traffic'])})", f"WoW change: {_wow_pct:+.1f}%"]
 report_data['sections'].append(traffic_section)
 
 # Section 3: Channels

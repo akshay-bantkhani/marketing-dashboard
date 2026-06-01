@@ -1486,17 +1486,31 @@ def _val_pct(v, total):
     pct = (v / total * 100) if total > 0 else 0
     return f"{fmt(v)} <span style='color:#6b7280;font-size:0.85em;'>({pct:.1f}%)</span>"
 
+# Per-week total across ALL countries (including India/Indonesia/Turkey) so %
+# reflects share of total traffic, not share of the visible 4 buckets.
+_week_country_total = co_weekly.groupby('Week_Idx')['Sessions'].sum().to_dict()
+
 rows_html = ""
 for _, r in pivot.iterrows():
-    current_tag = ' <span class="week-current">CURRENT</span>' if r['Week_Idx'] == cur_idx else ''
-    row_total = r['US'] + r['UK'] + r['Europe'] + r['Other']
-    rows_html += (
-        f"<tr><td><strong>{r['Week_Label']}</strong>{current_tag}</td>"
-        f"<td>{_val_pct(r['US'], row_total)}</td>"
-        f"<td>{_val_pct(r['UK'], row_total)}</td>"
-        f"<td>{_val_pct(r['Europe'], row_total)}</td>"
-        f"<td>{_val_pct(r['Other'], row_total)}</td></tr>"
-    )
+    is_current = r['Week_Idx'] == cur_idx
+    current_tag = ' <span class="week-current">CURRENT</span>' if is_current else ''
+    if is_current:
+        row_total = _week_country_total.get(r['Week_Idx'], 0)
+        rows_html += (
+            f"<tr><td><strong>{r['Week_Label']}</strong>{current_tag}</td>"
+            f"<td>{_val_pct(r['US'], row_total)}</td>"
+            f"<td>{_val_pct(r['UK'], row_total)}</td>"
+            f"<td>{_val_pct(r['Europe'], row_total)}</td>"
+            f"<td>{_val_pct(r['Other'], row_total)}</td></tr>"
+        )
+    else:
+        rows_html += (
+            f"<tr><td><strong>{r['Week_Label']}</strong></td>"
+            f"<td>{fmt(r['US'])}</td>"
+            f"<td>{fmt(r['UK'])}</td>"
+            f"<td>{fmt(r['Europe'])}</td>"
+            f"<td>{fmt(r['Other'])}</td></tr>"
+        )
 st.markdown(f'<table class="change-table"><tr><th>Week</th><th>🇺🇸 US</th><th>🇬🇧 UK</th><th>🇪🇺 Europe</th><th>🌍 Other</th></tr>{rows_html}</table>', unsafe_allow_html=True)
 
 # Insights

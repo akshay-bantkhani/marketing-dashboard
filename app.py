@@ -205,10 +205,73 @@ button[kind="secondary"]:hover, [data-testid="stButton"] button:hover { opacity:
 [data-testid="stExpander"] summary { font-weight: 600 !important; color: #1a56db !important; padding: 12px 16px !important; }
 [data-testid="stExpander"] [data-testid="stExpanderDetails"] { padding: 0 16px 16px !important; }
 
-/* === Hide Streamlit branding (keep header transparent so sidebar reopen button stays visible) === */
-#MainMenu, footer { visibility: hidden; }
-header[data-testid="stHeader"] { background: transparent !important; box-shadow: none !important; }
-header[data-testid="stHeader"] > div:first-child { display: none !important; }
+/* === Hide Streamlit branding (keep header + collapsed-sidebar control visible) === */
+#MainMenu, footer { visibility: hidden !important; }
+header[data-testid="stHeader"] {
+  background: transparent !important;
+  box-shadow: none !important;
+  height: 3.75rem !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 999990 !important;
+  pointer-events: auto !important;
+}
+/* Hide only the right-side decoration/status, NEVER the toolbar (it contains the sidebar reopen button) */
+header[data-testid="stHeader"] [data-testid="stDecoration"],
+header[data-testid="stHeader"] [data-testid="stStatusWidget"] { display: none !important; }
+/* Hide the actual menu/deploy items inside toolbar but keep toolbar itself visible */
+[data-testid="stToolbar"] [data-testid="stMainMenu"],
+[data-testid="stToolbar"] [data-testid="stToolbarActions"] { display: none !important; }
+[data-testid="stToolbar"] { display: flex !important; visibility: visible !important; }
+
+/* Force-show the reopen control across every Streamlit version / class name */
+[data-testid="stExpandSidebarButton"],
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"],
+button[data-testid="stExpandSidebarButton"],
+button[aria-label="Open sidebar"],
+button[kind="header"][aria-label*="ide"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: fixed !important;
+  top: 12px !important;
+  left: 12px !important;
+  z-index: 999999 !important;
+  background: linear-gradient(135deg, #0f3460, #1a56db) !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  box-shadow: 0 4px 14px rgba(15,52,96,0.35) !important;
+  pointer-events: auto !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transform: none !important;
+}
+[data-testid="stExpandSidebarButton"] *,
+[data-testid="stSidebarCollapsedControl"] *,
+[data-testid="collapsedControl"] *,
+button[data-testid="stExpandSidebarButton"] *,
+button[aria-label="Open sidebar"] * {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  width: auto !important;
+  height: auto !important;
+}
+[data-testid="stExpandSidebarButton"] svg,
+[data-testid="stSidebarCollapsedControl"] svg {
+  width: 22px !important;
+  height: 22px !important;
+  fill: #ffffff !important;
+}
 
 /* Always-visible sidebar collapse button (inside sidebar) */
 [data-testid="stSidebarCollapseButton"] {

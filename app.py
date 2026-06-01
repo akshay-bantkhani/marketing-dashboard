@@ -607,21 +607,34 @@ def insight_box(items, section_key=None):
     edit_key = f'{section_key}_editing'
     text_key = f'{section_key}_insights_text'
     area_key = f'{section_key}_edit_area'
+    last_auto_key = f'{section_key}_last_auto_text'
+    user_edited_key = f'{section_key}_user_edited'
+
+    auto_text = "\n".join(_strip_html_inline(i) for i in clean_items)
 
     if edit_key not in st.session_state:
         st.session_state[edit_key] = False
+    if user_edited_key not in st.session_state:
+        st.session_state[user_edited_key] = False
     if text_key not in st.session_state:
-        st.session_state[text_key] = "\n".join(_strip_html_inline(i) for i in clean_items)
-
-    auto_text = "\n".join(_strip_html_inline(i) for i in clean_items)
+        st.session_state[text_key] = auto_text
+        st.session_state[last_auto_key] = auto_text
+    else:
+        # Auto-refresh when underlying data changed AND user hasn't manually edited
+        if not st.session_state[user_edited_key] and st.session_state.get(last_auto_key) != auto_text:
+            st.session_state[text_key] = auto_text
+            st.session_state[last_auto_key] = auto_text
 
     def _toggle():
         st.session_state[edit_key] = not st.session_state[edit_key]
     def _save():
         st.session_state[text_key] = st.session_state[area_key]
+        st.session_state[user_edited_key] = True
         st.session_state[edit_key] = False
     def _reset():
         st.session_state[text_key] = auto_text
+        st.session_state[last_auto_key] = auto_text
+        st.session_state[user_edited_key] = False
         st.session_state[edit_key] = False
 
     if st.session_state[edit_key]:

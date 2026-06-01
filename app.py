@@ -212,23 +212,42 @@ header[data-testid="stHeader"] > div:first-child { display: none !important; }
 /* Always-visible sidebar collapse + reopen buttons (no hover-only fade) */
 [data-testid="stSidebarCollapseButton"],
 [data-testid="stSidebarCollapsedControl"],
-[data-testid="collapsedControl"] {
+[data-testid="collapsedControl"],
+section[data-testid="stSidebar"] + button,
+[data-testid="stSidebarNav"] ~ button {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
   transition: none !important;
+  pointer-events: auto !important;
+  z-index: 999999 !important;
 }
-[data-testid="stSidebar"]:not(:hover) [data-testid="stSidebarCollapseButton"] {
+
+/* Style the always-visible reopen button so it's clearly visible top-left */
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"] {
+  position: fixed !important;
+  top: 14px !important;
+  left: 14px !important;
+  background: linear-gradient(135deg, #0f3460, #1a56db) !important;
+  border-radius: 10px !important;
+  padding: 6px !important;
+  box-shadow: 0 4px 12px rgba(15,52,96,0.25) !important;
+  z-index: 999999 !important;
+}
+[data-testid="stSidebarCollapsedControl"] button,
+[data-testid="collapsedControl"] button,
+[data-testid="stSidebarCollapseButton"] button {
   opacity: 1 !important;
   visibility: visible !important;
+  background: transparent !important;
+  color: #ffffff !important;
+  border: none !important;
 }
-[data-testid="stSidebarCollapseButton"] button,
-[data-testid="stSidebarCollapsedControl"] button {
-  opacity: 1 !important;
-  visibility: visible !important;
+[data-testid="stSidebarCollapseButton"] button {
   background: #eff6ff !important;
-  border-radius: 8px !important;
   color: #0f3460 !important;
+  border-radius: 8px !important;
 }
 </style>
 """, unsafe_allow_html=True)

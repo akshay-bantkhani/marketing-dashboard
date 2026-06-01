@@ -1,0 +1,14 @@
+streamlit
+pandas
+plotly
+numpy
+fpdf2
+python-docx
+openpyxl
+pillow
+requests
+google-analytics-data
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client

@@ -335,9 +335,10 @@ def fetch_channels(_ct, prop, start, end):
 
 @st.cache_data(ttl=600, show_spinner=False)
 def fetch_channel_pages(_ct, prop, start, end):
-    """Fetch page-level breakdown per channel for drilldowns"""
+    """Landing-page breakdown per channel — one row per (channel, landing page, date).
+    Uses landingPage so sessions are counted once on the page where the session started."""
     creds = _get_creds()
-    r = _ga4_report(creds, prop, start, end, ['sessionDefaultChannelGroup','pagePath','date'], ['sessions','totalUsers'])
+    r = _ga4_report(creds, prop, start, end, ['sessionDefaultChannelGroup','landingPage','date'], ['sessions','totalUsers'])
     return _parse_response(r, ['Channel','Page','Date'], ['Sessions','Users'])
 
 @st.cache_data(ttl=600, show_spinner=False)
@@ -382,9 +383,11 @@ def fetch_organic_users(_ct, prop, start, end):
 
 @st.cache_data(ttl=600, show_spinner=False)
 def fetch_traffic_pages(_ct, prop, start, end):
-    """Fetch page-level sessions for drilldown on overall traffic"""
+    """Landing-page sessions for overall-traffic drilldown.
+    Uses landingPage so each session is counted once on its entry page —
+    sum of sessions across landing pages = total sessions for the period."""
     creds = _get_creds()
-    r = _ga4_report(creds, prop, start, end, ['pagePath','date'], ['sessions','totalUsers','screenPageViews'])
+    r = _ga4_report(creds, prop, start, end, ['landingPage','date'], ['sessions','totalUsers','screenPageViews'])
     return _parse_response(r, ['Page','Date'], ['Sessions','Users','Pageviews'])
 
 @st.cache_data(ttl=600, show_spinner=False)
@@ -687,14 +690,20 @@ def make_chart(df, x, y, title, chart_type='line', color=None, height=380, show_
     )
     return fig
 
-def drilldown_table(df, title="Top Pages by Sessions"):
-    """Render a page-level drilldown table"""
+def drilldown_table(df, title="Top Pages by Sessions", total_sessions=None):
+    """Render a page-level drilldown table.
+
+    GA4 `sessions` broken down by pagePath counts a session once per page visited,
+    so summing top-N pages overstates the actual session total. When `total_sessions`
+    is passed (the true week/channel total from a no-dim or single-dim query),
+    % share is computed against it. Otherwise falls back to the sum of top-N.
+    """
     if df.empty:
         st.info("No page-level data available")
         return
     top = df.groupby('Page').agg({'Sessions':'sum','Users':'sum'}).reset_index().sort_values('Sessions', ascending=False).head(10)
-    total = top['Sessions'].sum()
-    top['% Share'] = (top['Sessions'] / total * 100).round(1) if total > 0 else 0
+    denom = total_sessions if (total_sessions and total_sessions > 0) else top['Sessions'].sum()
+    top['% Share'] = (top['Sessions'] / denom * 100).round(1) if denom > 0 else 0
     rows_html = ""
     for i, (_, r) in enumerate(top.iterrows(), 1):
         rows_html += f"<tr><td>{i}</td><td><strong>{r['Page']}</strong></td><td>{fmt(r['Sessions'])}</td><td>{fmt(r['Users'])}</td><td>{r['% Share']:.1f}%</td></tr>"
@@ -1285,13 +1294,14 @@ for _, r in display_t.iterrows():
     rows_html += f"<tr><td class='week-label-cell'><strong>{r['Week_Label']}</strong>{current_tag}</td><td>{fmt(r['Sessions'])}</td><td>{fmt(r['Users'])}</td><td><span style='color:{pct_color};font-weight:600'>{target_pct:.0f}%</span></td><td>{chg}</td></tr>"
 st.markdown(f'<table class="change-table"><tr><th>Week</th><th>Sessions</th><th>Users</th><th>vs Target</th><th>WoW Change</th></tr>{rows_html}</table>', unsafe_allow_html=True)
 
+cur_s = t_weekly[t_weekly.Week_Idx==cur_idx]['Sessions'].sum()
+prev_s = t_weekly[t_weekly.Week_Idx==prev_idx]['Sessions'].sum()
+
 # Drilldown — toggle to see page source
 if st.checkbox("Show page-level breakdown (Current Week)", value=False, key="drill_traffic"):
     cur_pages = tp_weekly[tp_weekly.Week_Idx==cur_idx]
-    drilldown_table(cur_pages, "Top Pages — Current Week")
+    drilldown_table(cur_pages, "Top Pages — Current Week", total_sessions=cur_s)
 
-cur_s = t_weekly[t_weekly.Week_Idx==cur_idx]['Sessions'].sum()
-prev_s = t_weekly[t_weekly.Week_Idx==prev_idx]['Sessions'].sum()
 chg = pct_change(cur_s, prev_s)
 target_ach = (cur_s / targets['overall_traffic'] * 100) if targets['overall_traffic'] > 0 else 0
 insight_box([
@@ -1321,7 +1331,8 @@ st.markdown(f'<table class="change-table"><tr><th>Channel</th><th>This Week</th>
 if st.checkbox("Show page breakdown per channel", value=False, key="drill_channel"):
     sel_channel = st.selectbox("Select Channel", merged_ch['Channel'].tolist(), key="ch_drill")
     ch_pages = cp_weekly[(cp_weekly.Week_Idx==cur_idx) & (cp_weekly.Channel==sel_channel)]
-    drilldown_table(ch_pages, f"Top Pages — {sel_channel}")
+    _ch_total = merged_ch[merged_ch['Channel'] == sel_channel]['Sessions This Week'].sum() if len(merged_ch) else 0
+    drilldown_table(ch_pages, f"Top Pages — {sel_channel}", total_sessions=_ch_total)
 
 ch_insights = []
 top_ch = merged_ch.iloc[0] if len(merged_ch) else None

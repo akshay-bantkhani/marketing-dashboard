@@ -9,7 +9,8 @@ import pickle
 import numpy as np
 
 CONTIFY_LOGO = "https://www.contify.com/wp-content/uploads/2026/02/contify-logo.svg"
-st.set_page_config(page_title="Contify SEO Weekly Review", page_icon=CONTIFY_LOGO, layout="wide")
+st.set_page_config(page_title="Contify SEO Weekly Review", page_icon=CONTIFY_LOGO,
+                   layout="wide", initial_sidebar_state="expanded")
 
 # =====================================================
 # PATHS & CONFIG
@@ -209,45 +210,44 @@ button[kind="secondary"]:hover, [data-testid="stButton"] button:hover { opacity:
 header[data-testid="stHeader"] { background: transparent !important; box-shadow: none !important; }
 header[data-testid="stHeader"] > div:first-child { display: none !important; }
 
-/* Always-visible sidebar collapse + reopen buttons (no hover-only fade) */
-[data-testid="stSidebarCollapseButton"],
-[data-testid="stSidebarCollapsedControl"],
-[data-testid="collapsedControl"],
-section[data-testid="stSidebar"] + button,
-[data-testid="stSidebarNav"] ~ button {
+/* Always-visible sidebar collapse button (inside sidebar) */
+[data-testid="stSidebarCollapseButton"] {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  transition: none !important;
-  pointer-events: auto !important;
-  z-index: 999999 !important;
+}
+[data-testid="stSidebarCollapseButton"] button {
+  opacity: 1 !important;
+  visibility: visible !important;
+  background: #eff6ff !important;
+  color: #0f3460 !important;
+  border-radius: 8px !important;
+  border: 1px solid #dbeafe !important;
 }
 
-/* Style the always-visible reopen button so it's clearly visible top-left */
+/* Always-visible reopen button (top-left, when sidebar is collapsed) */
 [data-testid="stSidebarCollapsedControl"],
 [data-testid="collapsedControl"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
   position: fixed !important;
-  top: 14px !important;
-  left: 14px !important;
+  top: 12px !important;
+  left: 12px !important;
+  z-index: 999999 !important;
   background: linear-gradient(135deg, #0f3460, #1a56db) !important;
   border-radius: 10px !important;
-  padding: 6px !important;
-  box-shadow: 0 4px 12px rgba(15,52,96,0.25) !important;
-  z-index: 999999 !important;
+  padding: 4px 8px !important;
+  box-shadow: 0 4px 14px rgba(15,52,96,0.35) !important;
+  pointer-events: auto !important;
 }
 [data-testid="stSidebarCollapsedControl"] button,
-[data-testid="collapsedControl"] button,
-[data-testid="stSidebarCollapseButton"] button {
+[data-testid="collapsedControl"] button {
   opacity: 1 !important;
   visibility: visible !important;
   background: transparent !important;
   color: #ffffff !important;
   border: none !important;
-}
-[data-testid="stSidebarCollapseButton"] button {
-  background: #eff6ff !important;
-  color: #0f3460 !important;
-  border-radius: 8px !important;
 }
 </style>
 """, unsafe_allow_html=True)

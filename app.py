@@ -681,11 +681,12 @@ def make_chart(df, x, y, title, chart_type='line', color=None, height=380, show_
     fig.update_layout(
         height=height, plot_bgcolor='white', paper_bgcolor='white',
         font=dict(family='Inter', color='#1a1a2e', size=12),
-        margin=dict(t=50, b=50, l=60, r=30),
+        margin=dict(t=80 if color else 50, b=50, l=60, r=30),
+        title=dict(x=0, xanchor='left', y=0.97, yanchor='top', font=dict(size=14)),
         xaxis=dict(gridcolor='#f0f0f0', tickfont=dict(size=11), title=None),
         yaxis=dict(gridcolor='#f0f0f0', tickfont=dict(size=11), rangemode='tozero', title=None,
                    tickformat=',d', separatethousands=True),
-        legend=dict(orientation='h', yanchor='bottom', y=1.02, bgcolor='rgba(0,0,0,0)'),
+        legend=dict(orientation='h', yanchor='top', y=-0.15, x=0, xanchor='left', bgcolor='rgba(0,0,0,0)'),
         hovermode='x unified',
     )
     return fig

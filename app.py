@@ -35,6 +35,9 @@ EXCLUDE_FROM_OTHER = ['India', 'Indonesia', 'Turkey']
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block');
 
 /* === Force Light Theme & Global Reset === */
 html, body, [data-testid="stApp"], [data-testid="stApp"] > div { background-color: #ffffff !important; color: #1e293b !important; }

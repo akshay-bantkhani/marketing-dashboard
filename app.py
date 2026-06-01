@@ -208,7 +208,28 @@ button[kind="secondary"]:hover, [data-testid="stButton"] button:hover { opacity:
 #MainMenu, footer { visibility: hidden; }
 header[data-testid="stHeader"] { background: transparent !important; box-shadow: none !important; }
 header[data-testid="stHeader"] > div:first-child { display: none !important; }
-[data-testid="stSidebarCollapsedControl"] { display: block !important; visibility: visible !important; opacity: 1 !important; }
+
+/* Always-visible sidebar collapse + reopen buttons (no hover-only fade) */
+[data-testid="stSidebarCollapseButton"],
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+[data-testid="stSidebar"]:not(:hover) [data-testid="stSidebarCollapseButton"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+[data-testid="stSidebarCollapseButton"] button,
+[data-testid="stSidebarCollapsedControl"] button {
+  opacity: 1 !important;
+  visibility: visible !important;
+  background: #eff6ff !important;
+  border-radius: 8px !important;
+  color: #0f3460 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 

@@ -204,8 +204,11 @@ button[kind="secondary"]:hover, [data-testid="stButton"] button:hover { opacity:
 [data-testid="stExpander"] summary { font-weight: 600 !important; color: #1a56db !important; padding: 12px 16px !important; }
 [data-testid="stExpander"] [data-testid="stExpanderDetails"] { padding: 0 16px 16px !important; }
 
-/* === Hide Streamlit branding === */
-#MainMenu, footer, header { visibility: hidden; }
+/* === Hide Streamlit branding (keep header transparent so sidebar reopen button stays visible) === */
+#MainMenu, footer { visibility: hidden; }
+header[data-testid="stHeader"] { background: transparent !important; box-shadow: none !important; }
+header[data-testid="stHeader"] > div:first-child { display: none !important; }
+[data-testid="stSidebarCollapsedControl"] { display: block !important; visibility: visible !important; opacity: 1 !important; }
 </style>
 """, unsafe_allow_html=True)
 

@@ -805,12 +805,9 @@ prev_idx = len(weeks) - 2
 tag = "DEMO" if auth_method == "demo" else "LIVE"
 tag_cls = "tag-demo" if auth_method == "demo" else "tag-live"
 st.markdown(f"""
-<div class="dashboard-header" style="display:flex;align-items:center;gap:18px;">
-    <img src="{CONTIFY_LOGO}" alt="Contify" style="height:42px;width:auto;background:#fff;padding:6px 10px;border-radius:8px;flex-shrink:0;" />
-    <div style="flex:1;">
-        <h1 style="margin:0;">Weekly SEO Review <span class="{tag_cls}">{tag}</span></h1>
-        <p style="margin:6px 0 0;">📅 Current Week: {current_week[2]} &nbsp;|&nbsp; Range: {weeks[0][0].strftime('%d %b')} – {weeks[-1][1].strftime('%d %b %Y')} ({num_weeks}w) &nbsp;|&nbsp; contify.com</p>
-    </div>
+<div class="dashboard-header">
+    <h1>Weekly SEO Review <span class="{tag_cls}">{tag}</span></h1>
+    <p>📅 Current Week: {current_week[2]} &nbsp;|&nbsp; Range: {weeks[0][0].strftime('%d %b')} – {weeks[-1][1].strftime('%d %b %Y')} ({num_weeks}w) &nbsp;|&nbsp; contify.com</p>
 </div>
 """, unsafe_allow_html=True)
 
